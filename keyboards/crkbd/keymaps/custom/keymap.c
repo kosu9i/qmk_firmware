@@ -32,10 +32,13 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   ADJUST,
+  SECRET
 };
 
-// cf. https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_jp.h
+// NOTE: To define macros that has sensitive information is supremely bad idea!!
+#define SECRETSTR "xxxxxxxxxxxxx"
 
+// cf. https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_jp.h
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //[L_BASE] = LAYOUT_split_3x6_3(
   [0] = LAYOUT_split_3x6_3(
@@ -46,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    JP_Z,    JP_X,    JP_C,    JP_V,    JP_B,                         JP_N,    JP_M, JP_COMM,  JP_DOT, JP_SLSH, KC_LSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2),  KC_RALT
+                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RALT
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -84,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,                      KC_BSPC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
   //|--------+--------+--------+--------+--------+-                            |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      KC_LSFT,RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  SECRET,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -183,9 +186,30 @@ void oled_task_user(void) {
     }
 }
 
+//bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//  if (record->event.pressed) {
+//    set_keylog(keycode, record);
+//  }
+//  return true;
+//}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     set_keylog(keycode, record);
+  }
+  switch (keycode) {
+#ifdef SECRETSTR
+    case SECRET:
+      if (record->event.pressed) {
+        // when keycode QMKBEST is pressed
+          SEND_STRING(SECRETSTR"\n");
+        } //else {
+          // when keycode QMKBEST is released
+        //}
+      break;
+#endif // SECRETSTR
+    default:
+      break;
   }
   return true;
 }
