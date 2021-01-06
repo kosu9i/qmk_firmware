@@ -37,7 +37,8 @@ enum custom_keycodes {
 // cf. https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_jp.h
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [L_BASE] = LAYOUT_split_3x6_3(
+  //[L_BASE] = LAYOUT_split_3x6_3(
+  [0] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    JP_Q,    JP_W,    JP_E,    JP_R,    JP_T,                         JP_Y,    JP_U,    JP_I,    JP_O,   JP_P,  JP_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -45,46 +46,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    JP_Z,    JP_X,    JP_C,    JP_V,    JP_B,                         JP_N,    JP_M, JP_COMM,  JP_DOT, JP_SLSH, KC_LSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   LOWER,  KC_SPC,     KC_ENT, RAISE,  KC_RALT
+                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2),  KC_RALT
                                       //`--------------------------'  `--------------------------'
 
   ),
 
-  [L_LOWER] = LAYOUT_split_3x6_3(
+  //[L_LOWER] = LAYOUT_split_3x6_3(
+  [1] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_ESC,    JP_1,    JP_2,    JP_3,    JP_4,    JP_5,                         JP_6,    JP_7,    JP_8,    JP_9,    JP_0, JP_MINS,
+       KC_ESC, JP_EXLM, JP_DQUO, JP_HASH,  JP_DLR, JP_PERC,                      JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_YEN, JP_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_BSPC,    JP_4,    JP_5,    JP_6, JP_PLUS, JP_ASTR,
+      KC_LCTL, XXXXXXX, XXXXXXX,KC_LANG2,KC_LANG1, XXXXXXX,                      KC_BSPC, JP_CIRC, JP_LBRC, JP_RBRC,  JP_AT, JP_PIPE,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      JP_EQL,     JP_1,    JP_2,    JP_3, JP_DOT,  JP_SLSH,
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       JP_EQL, JP_TILD, JP_QUOT, JP_DQUO, JP_GRV, JP_UNDS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_ENT, _______,    JP_0
+                                          KC_LGUI, _______,  KC_SPC,     KC_ENT,   MO(3), KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
 
-  [L_RAISE] = LAYOUT_split_3x6_3(
+  //[L_RAISE] = LAYOUT_split_3x6_3(
+  [2] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_TAB,    JP_1,    JP_2,    JP_3,    JP_4,    JP_5,                         JP_6,    JP_7,    JP_8,    JP_9,    JP_0, JP_MINS,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LCTL,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, KC_LSFT,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LGUI,   MO(3),  KC_SPC,     KC_ENT, _______, KC_RALT
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  //[L_ADJUST] = LAYOUT_split_3x6_3(
+  [3] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R,RGB_M_SW,RGB_M_SN,                      RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, EEP_RST,   RESET,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,                       KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
+      KC_LCTL, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,                      KC_BSPC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
   //|--------+--------+--------+--------+--------+-                            |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                       KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, KC_LSFT,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
-                                      //`--------------------------'  `--------------------------'
-  ),
-
-  [L_ADJUST] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB, JP_EXLM, JP_DQUO, JP_HASH,  JP_DLR, JP_PERC,                      JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_YEN, JP_MINS,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_BSPC, JP_CIRC, JP_LBRC, JP_RBRC,  JP_AT, JP_PIPE,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      JP_EQL,  JP_TILD, JP_QUOT, JP_DQUO, JP_GRV, JP_UNDS,
+      KC_LSFT,RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
   )
+
 };
 
 #ifdef OLED_DRIVER_ENABLE
@@ -178,88 +183,88 @@ void oled_task_user(void) {
     }
 }
 
-//bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//  if (record->event.pressed) {
-//    set_keylog(keycode, record);
-//  }
-//  return true;
-//}
-
-// cf. https://gist.github.com/okapies/5d13a174cbb13ce34dbd9faede9d0b71#file-keymap-c-L99-L164
-// https://okapies.hateblo.jp/entry/2019/02/02/133953
-
-static bool lower_pressed = false;
-static uint16_t lower_pressed_time = 0;
-static bool raise_pressed = false;
-static uint16_t raise_pressed_time = 0;
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     set_keylog(keycode, record);
   }
-  switch (keycode) {
-    case LOWER:
-      if (record->event.pressed) {
-        lower_pressed = true;
-        lower_pressed_time = record->event.time;
-
-        layer_on(L_LOWER);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-      } else {
-        layer_off(L_LOWER);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-
-        if (lower_pressed) {
-        //if (lower_pressed && (TIMER_DIFF_16(record->event.time, lower_pressed_time) < TAPPING_TERM)) {
-          register_code(KC_LANG2); // for macOS
-          //register_code(KC_MHEN);
-          //unregister_code(KC_MHEN);
-          unregister_code(KC_LANG2);
-        }
-        lower_pressed = false;
-      }
-      return false;
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        raise_pressed = true;
-        raise_pressed_time = record->event.time;
-
-        layer_on(L_RAISE);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-      } else {
-        layer_off(L_RAISE);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-
-        if (raise_pressed) {
-        //if (raise_pressed && (TIMER_DIFF_16(record->event.time, raise_pressed_time) < TAPPING_TERM)) {
-          register_code(KC_LANG1); // for macOS
-          //register_code(KC_HENK);
-          //unregister_code(KC_HENK);
-          unregister_code(KC_LANG1);
-        }
-        raise_pressed = false;
-      }
-      return false;
-      break;
-    case ADJUST:
-      if (record->event.pressed) {
-        layer_on(L_ADJUST);
-      } else {
-        layer_off(L_ADJUST);
-      }
-      return false;
-      break;
-    default:
-      if (record->event.pressed) {
-        // reset the flags
-        lower_pressed = false;
-        raise_pressed = false;
-      }
-      break;
-  }
   return true;
 }
+
+// cf. https://gist.github.com/okapies/5d13a174cbb13ce34dbd9faede9d0b71#file-keymap-c-L99-L164
+// https://okapies.hateblo.jp/entry/2019/02/02/133953
+//
+//static bool lower_pressed = false;
+//static uint16_t lower_pressed_time = 0;
+//static bool raise_pressed = false;
+//static uint16_t raise_pressed_time = 0;
+//
+//bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//  if (record->event.pressed) {
+//    set_keylog(keycode, record);
+//  }
+//  switch (keycode) {
+//    case LOWER:
+//      if (record->event.pressed) {
+//        lower_pressed = true;
+//        lower_pressed_time = record->event.time;
+//
+//        layer_on(L_LOWER);
+//        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+//      } else {
+//        layer_off(L_LOWER);
+//        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+//
+//        if (lower_pressed) {
+//        //if (lower_pressed && (TIMER_DIFF_16(record->event.time, lower_pressed_time) < TAPPING_TERM)) {
+//          register_code(KC_LANG2); // for macOS
+//          //register_code(KC_MHEN);
+//          //unregister_code(KC_MHEN);
+//          unregister_code(KC_LANG2);
+//        }
+//        lower_pressed = false;
+//      }
+//      return false;
+//      break;
+//    case RAISE:
+//      if (record->event.pressed) {
+//        raise_pressed = true;
+//        raise_pressed_time = record->event.time;
+//
+//        layer_on(L_RAISE);
+//        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+//      } else {
+//        layer_off(L_RAISE);
+//        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+//
+//        if (raise_pressed) {
+//        //if (raise_pressed && (TIMER_DIFF_16(record->event.time, raise_pressed_time) < TAPPING_TERM)) {
+//          register_code(KC_LANG1); // for macOS
+//          //register_code(KC_HENK);
+//          //unregister_code(KC_HENK);
+//          unregister_code(KC_LANG1);
+//        }
+//        raise_pressed = false;
+//      }
+//      return false;
+//      break;
+//    case ADJUST:
+//      if (record->event.pressed) {
+//        layer_on(L_ADJUST);
+//      } else {
+//        layer_off(L_ADJUST);
+//      }
+//      return false;
+//      break;
+//    default:
+//      if (record->event.pressed) {
+//        // reset the flags
+//        lower_pressed = false;
+//        raise_pressed = false;
+//      }
+//      break;
+//  }
+//  return true;
+//}
 
 
 #endif // OLED_DRIVER_ENABLE
