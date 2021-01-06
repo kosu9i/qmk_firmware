@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //#define TAPPING_TERM 200
 
+#define _______ KC_TRNS
+#define XXXXXXX KC_NO
+
 #define L_BASE 0
 #define L_LOWER 2
 #define L_RAISE 4
@@ -32,16 +35,119 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   ADJUST,
-  SECRET
+  SECRET,
 };
+
+// cf. https://leopardgecko.hatenablog.com/entry/2019/01/04/131410
+// cf. https://t1y.me/mods-ime-in-1key/
+// Tap Danceのキーコード設定
+enum {
+  X_TAP_DANCE_1 = 0,
+  X_TAP_DANCE_2
+};
+#define TAP_L TD(X_TAP_DANCE_1)
+#define TAP_R TD(X_TAP_DANCE_2)
+
+// TAP DANCEの処理
+enum {
+  SINGLE_TAP = 1,
+  SINGLE_HOLD = 2,
+  DOUBLE_TAP = 3,
+};
+
+typedef struct {
+  bool is_press_action;
+  int state;
+} tap;
+
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    if (!state->pressed) return SINGLE_TAP;
+    else return SINGLE_HOLD;
+  }
+  else if (state->count == 2) {
+    return DOUBLE_TAP;
+  }
+  else return 6;
+}
+
+//instanalize an instance of 'tap' for the 'x' tap dance.
+static tap xtap_state = {
+  .is_press_action = true,
+  .state = 0
+};
+
+void x_finished_1 (qk_tap_dance_state_t *state, void *user_data) {
+  xtap_state.state = cur_dance(state);
+  switch (xtap_state.state) {
+    case DOUBLE_TAP:                    
+        register_code(KC_LANG2);
+        break;
+    //case SINGLE_TAP:
+    case SINGLE_HOLD:
+        layer_on(L_LOWER);
+        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+        break;
+  }
+}
+
+void x_reset_1 (qk_tap_dance_state_t *state, void *user_data) {
+  switch (xtap_state.state) {
+    case DOUBLE_TAP:
+        unregister_code(KC_LANG2);
+        break;
+    //case SINGLE_TAP:
+    case SINGLE_HOLD: 
+        layer_off(L_LOWER);
+        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+        clear_mods();    // 同時押し対策。キーを離したときにすべての装飾キーをクリアする
+        break;
+  }
+  xtap_state.state = 0;
+}
+
+void x_finished_2 (qk_tap_dance_state_t *state, void *user_data) {
+  xtap_state.state = cur_dance(state);
+  switch (xtap_state.state) {
+    case DOUBLE_TAP:
+        register_code(KC_LANG1);
+        break;
+    //case SINGLE_TAP:                     
+    case SINGLE_HOLD:                   
+        layer_on(L_RAISE);
+        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+        break;
+  }
+}
+
+void x_reset_2 (qk_tap_dance_state_t *state, void *user_data) {
+  switch (xtap_state.state) {
+    case DOUBLE_TAP:
+        unregister_code(KC_LANG1);
+        break;
+    //case SINGLE_TAP:
+    case SINGLE_HOLD: 
+        layer_off(L_RAISE);
+        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+        clear_mods();    // 同時押し対策。キーを離したときにすべての装飾キーをクリアする
+        break;
+  }
+  xtap_state.state = 0;
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+ [X_TAP_DANCE_1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished_1, x_reset_1),
+ [X_TAP_DANCE_2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished_2, x_reset_2),
+};
+
 
 // NOTE: To define macros that has sensitive information is supremely bad idea!!
 //#define SECRETSTR "xxxxxxxxxxxxx"
 
 // cf. https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_jp.h
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  //[L_BASE] = LAYOUT_split_3x6_3(
-  [0] = LAYOUT_split_3x6_3(
+  [L_BASE] = LAYOUT_split_3x6_3(
+  //[0] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    JP_Q,    JP_W,    JP_E,    JP_R,    JP_T,                         JP_Y,    JP_U,    JP_I,    JP_O,   JP_P,  JP_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -49,13 +155,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    JP_Z,    JP_X,    JP_C,    JP_V,    JP_B,                         JP_N,    JP_M, JP_COMM,  JP_DOT, JP_SLSH, KC_LSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RALT
+                                          KC_LGUI,   TAP_L,  KC_SPC,     KC_ENT,   TAP_R, KC_RALT
                                       //`--------------------------'  `--------------------------'
 
   ),
 
-  //[L_LOWER] = LAYOUT_split_3x6_3(
-  [1] = LAYOUT_split_3x6_3(
+  [L_LOWER] = LAYOUT_split_3x6_3(
+  //[1] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_ESC, JP_EXLM, JP_DQUO, JP_HASH,  JP_DLR, JP_PERC,                      JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_YEN, JP_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -63,12 +169,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       JP_EQL, JP_TILD, JP_QUOT, JP_DQUO, JP_GRV, JP_UNDS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_ENT,   MO(3), KC_RALT
+                                          KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
 
-  //[L_RAISE] = LAYOUT_split_3x6_3(
-  [2] = LAYOUT_split_3x6_3(
+  [L_RAISE] = LAYOUT_split_3x6_3(
+  //[2] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    JP_1,    JP_2,    JP_3,    JP_4,    JP_5,                         JP_6,    JP_7,    JP_8,    JP_9,    JP_0, JP_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -76,12 +182,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, KC_LSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   MO(3),  KC_SPC,     KC_ENT, _______, KC_RALT
+                                          KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
 
-  //[L_ADJUST] = LAYOUT_split_3x6_3(
-  [3] = LAYOUT_split_3x6_3(
+  [L_ADJUST] = LAYOUT_split_3x6_3(
+  //[3] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R,RGB_M_SW,RGB_M_SN,                      RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, EEP_RST,   RESET,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -292,3 +398,5 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 #endif // OLED_DRIVER_ENABLE
+
+
