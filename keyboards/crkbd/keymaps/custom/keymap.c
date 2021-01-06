@@ -36,7 +36,7 @@ enum custom_keycodes {
 };
 
 // NOTE: To define macros that has sensitive information is supremely bad idea!!
-#define SECRETSTR "xxxxxxxxxxxxx"
+//#define SECRETSTR "xxxxxxxxxxxxx"
 
 // cf. https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_jp.h
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
