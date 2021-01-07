@@ -97,10 +97,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_master) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  }
-  return rotation;
+    if (!is_master) {
+        return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    }
+    return rotation;
 }
 
 void oled_render_layer_state(void) {
@@ -193,6 +193,8 @@ void oled_task_user(void) {
 //  return true;
 //}
 
+#endif // OLED_DRIVER_ENABLE
+
 //bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 //  if (record->event.pressed) {
 //    set_keylog(keycode, record);
@@ -222,83 +224,110 @@ static uint16_t lower_pressed_time = 0;
 static bool raise_pressed = false;
 static uint16_t raise_pressed_time = 0;
 
+// cf. https://blog.magcho.com/2020/4/qmk_firmware%E3%81%A7ctrl%E3%81%A8%E3%81%AE%E5%90%8C%E6%99%82%E6%8A%BC%E3%81%97%E3%82%92%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%E3%81%99%E3%82%8B/
+static bool ctrl_pressed = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-    set_keylog(keycode, record);
-  }
-  switch (keycode) {
-    case LOWER:
-      if (record->event.pressed) {
-        lower_pressed = true;
-        lower_pressed_time = record->event.time;
-
-        layer_on(L_LOWER);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-      } else {
-        layer_off(L_LOWER);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-
-        if (lower_pressed) {
-        //if (lower_pressed && (TIMER_DIFF_16(record->event.time, lower_pressed_time) < TAPPING_TERM)) {
-          register_code(KC_LANG2); // for macOS
-          //register_code(KC_MHEN);
-          //unregister_code(KC_MHEN);
-          unregister_code(KC_LANG2);
-        }
-        lower_pressed = false;
-      }
-      return false;
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        raise_pressed = true;
-        raise_pressed_time = record->event.time;
-
-        layer_on(L_RAISE);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-      } else {
-        layer_off(L_RAISE);
-        update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
-
-        if (raise_pressed) {
-        //if (raise_pressed && (TIMER_DIFF_16(record->event.time, raise_pressed_time) < TAPPING_TERM)) {
-          register_code(KC_LANG1); // for macOS
-          //register_code(KC_HENK);
-          //unregister_code(KC_HENK);
-          unregister_code(KC_LANG1);
-        }
-        raise_pressed = false;
-      }
-      return false;
-      break;
-    case ADJUST:
-      if (record->event.pressed) {
-        layer_on(L_ADJUST);
-      } else {
-        layer_off(L_ADJUST);
-      }
-      return false;
-      break;
-#ifdef SECRETSTR
-    case SECRET:
-      if (record->event.pressed) {
-        // when keycode is pressed
-          SEND_STRING(SECRETSTR"\n");
-        } //else {
-          // when keycode is released
-        //}
-      break;
-#endif // SECRETSTR
-    default:
-      if (record->event.pressed) {
-        // reset the flags
-        lower_pressed = false;
-        raise_pressed = false;
-      }
-      break;
-  }
-  return true;
-}
-
-
+#ifdef OLED_DRIVER_ENABLE
+    if (record->event.pressed) {
+        set_keylog(keycode, record);
+    }
 #endif // OLED_DRIVER_ENABLE
+    switch (keycode) {
+        case LOWER:
+            if (record->event.pressed) {
+                lower_pressed = true;
+                lower_pressed_time = record->event.time;
+
+                layer_on(L_LOWER);
+                update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+            } else {
+                layer_off(L_LOWER);
+                update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+
+                if (lower_pressed) {
+                //if (lower_pressed && (TIMER_DIFF_16(record->event.time, lower_pressed_time) < TAPPING_TERM)) {
+                    register_code(KC_LANG2); // for macOS
+                    //register_code(KC_MHEN);
+                    //unregister_code(KC_MHEN);
+                    unregister_code(KC_LANG2);
+                }
+                lower_pressed = false;
+            }
+            return false;
+            break;
+        case RAISE:
+            if (record->event.pressed) {
+                raise_pressed = true;
+                raise_pressed_time = record->event.time;
+
+                layer_on(L_RAISE);
+                update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+            } else {
+                layer_off(L_RAISE);
+                update_tri_layer(L_LOWER, L_RAISE, L_ADJUST);
+
+                if (raise_pressed) {
+                //if (raise_pressed && (TIMER_DIFF_16(record->event.time, raise_pressed_time) < TAPPING_TERM)) {
+                    register_code(KC_LANG1); // for macOS
+                    //register_code(KC_HENK);
+                    //unregister_code(KC_HENK);
+                    unregister_code(KC_LANG1);
+                }
+                raise_pressed = false;
+            }
+            return false;
+            break;
+        case ADJUST:
+            if (record->event.pressed) {
+                layer_on(L_ADJUST);
+            } else {
+                layer_off(L_ADJUST);
+            }
+            return false;
+            break;
+        case KC_LCTRL:
+            if (record->event.pressed) {
+                register_code(KC_LCTRL);
+                ctrl_pressed = true;
+            } else {
+                unregister_code(KC_LCTRL);
+                ctrl_pressed = false;
+            }
+            break;
+#ifdef SECRETSTR
+        case SECRET:
+            if (record->event.pressed) {
+                // when keycode is pressed
+                    SEND_STRING(SECRETSTR"\n");
+                } //else {
+                    // when keycode is released
+                //}
+            break;
+#endif // SECRETSTR
+        default:
+            if (ctrl_pressed) {
+                switch (keycode) {
+                    case KC_H:
+                        if (record->event.pressed) {
+                            unregister_code(KC_LCTRL);
+                            register_code(KC_BSPACE);
+                        } else {
+                            unregister_code(KC_BSPACE);
+                            if (ctrl_pressed) {
+                                register_code(KC_LCTRL);
+                            }
+                        }
+                        return false;
+                        break;
+                }
+            }
+            if (record->event.pressed) {
+                // reset the flags
+                lower_pressed = false;
+                raise_pressed = false;
+            }
+            break;
+    }
+    return true;
+}
