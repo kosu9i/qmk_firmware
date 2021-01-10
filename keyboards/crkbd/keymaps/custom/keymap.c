@@ -226,6 +226,7 @@ static uint16_t raise_pressed_time = 0;
 
 // cf. https://blog.magcho.com/2020/4/qmk_firmware%E3%81%A7ctrl%E3%81%A8%E3%81%AE%E5%90%8C%E6%99%82%E6%8A%BC%E3%81%97%E3%82%92%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%E3%81%99%E3%82%8B/
 static bool ctrl_pressed = false;
+static bool exceptionaly_ctrl_layer_pressed = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef OLED_DRIVER_ENABLE
@@ -288,10 +289,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case KC_LCTRL:
             if (record->event.pressed) {
-                register_code(KC_LCTRL);
                 ctrl_pressed = true;
             } else {
-                unregister_code(KC_LCTRL);
                 ctrl_pressed = false;
             }
             break;
@@ -306,17 +305,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 #endif // SECRETSTR
         default:
-            if (ctrl_pressed) {
+            if (ctrl_pressed || exceptionaly_ctrl_layer_pressed) {
                 switch (keycode) {
                     case KC_H:
                         if (record->event.pressed) {
                             unregister_code(KC_LCTRL);
                             register_code(KC_BSPACE);
+                            exceptionaly_ctrl_layer_pressed = true;
                         } else {
                             unregister_code(KC_BSPACE);
                             if (ctrl_pressed) {
                                 register_code(KC_LCTRL);
                             }
+                            exceptionaly_ctrl_layer_pressed = false;
                         }
                         return false;
                         break;
