@@ -54,27 +54,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   ),
 
-  [L_RAISE] = LAYOUT_split_3x6_3(
-  //[1] = LAYOUT_split_3x6_3(
+  [L_LOWER] = LAYOUT_split_3x6_3(
+  //[2] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_ESC, JP_EXLM, JP_DQUO, JP_HASH,  JP_DLR, JP_PERC,                      JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_YEN, JP_MINS,
+       KC_ESC,    JP_1,    JP_2,    JP_3,    JP_4,    JP_5,                         JP_6,    JP_7,    JP_8,    JP_9,    JP_0, JP_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_BSPC, JP_CIRC, JP_LBRC, JP_RBRC,  JP_AT, JP_PIPE,
+      KC_LCTL,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, JP_PLUS, JP_ASTR,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       JP_EQL, JP_TILD, JP_QUOT, JP_DQUO, JP_GRV, JP_UNDS,
+      KC_LSFT,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                      KC_HOME, KC_PGDN, KC_PGUP, KC_END,  JP_SLSH, KC_LSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
 
-  [L_LOWER] = LAYOUT_split_3x6_3(
-  //[2] = LAYOUT_split_3x6_3(
+  [L_RAISE] = LAYOUT_split_3x6_3(
+  //[1] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB,    JP_1,    JP_2,    JP_3,    JP_4,    JP_5,                         JP_6,    JP_7,    JP_8,    JP_9,    JP_0, JP_MINS,
+       KC_ESC, JP_EXLM, JP_DQUO, JP_HASH,  JP_DLR, JP_PERC,                      JP_AMPR, JP_LPRN, JP_RPRN, JP_CIRC,  JP_YEN, JP_MINS,  
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
+      KC_LCTL, XXXXXXX, JP_DQUO, JP_QUOT, JP_GRV,  XXXXXXX,                      KC_BSPC, JP_LBRC, JP_RBRC, JP_TILD,   JP_AT, JP_PIPE,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                      KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, KC_LSFT,
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       JP_EQL, JP_LCBR, JP_RCBR,  JP_DOT, JP_SLSH, JP_UNDS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
