@@ -298,7 +298,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case SECRET:
             if (record->event.pressed) {
                 // when keycode is pressed
-                    SEND_STRING(SECRETSTR"\n");
+                    SEND_STRING(SECRETSTR);
                 } //else {
                     // when keycode is released
                 //}
